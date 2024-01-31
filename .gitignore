@@ -1,0 +1,8 @@
+/.venv
+/.vscode
+
+OneShot-Home.jpg
+newbot.code-workspace
+record.txt
+
+*.pyc

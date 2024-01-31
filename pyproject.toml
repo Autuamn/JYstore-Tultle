@@ -1,0 +1,15 @@
+[project]
+name = "newbot"
+version = "0.1.0"
+description = "newbot"
+readme = "README.md"
+requires-python = ">=3.8, <4.0"
+
+[tool.nonebot]
+adapters = [
+    { name = "QQ", module_name = "nonebot.adapters.qq" },
+    {name = "开黑啦", module_name = "nonebot.adapters.kaiheila"}
+]
+plugins = ["nonebot_plugin_status", "nonebot_plugin_escape_url"]
+plugin_dirs = ["src/plugins"]
+builtin_plugins = ["echo"]
