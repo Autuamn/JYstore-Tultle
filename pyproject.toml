@@ -1,7 +1,7 @@
 [project]
-name = "newbot"
+name = "JYstore-Tultle"
 version = "0.1.0"
-description = "newbot"
+description = "Just a tultle"
 readme = "README.md"
 requires-python = ">=3.8, <4.0"
 
