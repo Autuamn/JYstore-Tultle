@@ -2,7 +2,7 @@
 /.vscode
 
 /*.jpg
-newbot.code-workspace
+/*.code-workspace
 record.txt
 
 *.pyc
