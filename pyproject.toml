@@ -10,6 +10,6 @@ adapters = [
     { name = "QQ", module_name = "nonebot.adapters.qq" },
     {name = "开黑啦", module_name = "nonebot.adapters.kaiheila"}
 ]
-plugins = ["nonebot_plugin_status", "nonebot_plugin_escape_url"]
+plugins = ["nonebot_plugin_status"]
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
