@@ -48,7 +48,7 @@ cd JYstore-Tultle
 3. 安装适配器
 
     ```bash
-    pip install nonebot.adapters.qq nonebot.adapters.kaiheila
+    pip install nonebot-adapter-qq nonebot-adapter-kaiheila
     ```
 
 4. 安装插件
