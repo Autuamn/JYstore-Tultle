@@ -1,10 +1,7 @@
-/.venv
-/.vscode
-
-/*.jpg
-/*.code-workspace
-record.txt
-
-.env*
+/*
+!/src
 
 *.pyc
+
+!.gitignore
+!pyproject.toml
