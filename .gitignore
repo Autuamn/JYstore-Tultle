@@ -1,0 +1,7 @@
+/*
+!/src
+
+*.pyc
+
+!.gitignore
+!pyproject.toml
