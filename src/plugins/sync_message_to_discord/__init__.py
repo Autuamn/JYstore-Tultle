@@ -87,7 +87,9 @@ async def get_message(bot: qq_Bot, event: qq_GuildMessageEvent):
         elif msg.type == "mention_user":
             # @人
             msgData = dc_MessageSegment.text(
-                await get_member_name(bot, event, msg.data["user_id"])
+                f"@[ID:{msg.data["user_id"]}]"
+                + await get_member_name(bot, event, msg.data["user_id"])
+                + " "
             )
         elif msg.type == "mention_everyone":
             # @全体
