@@ -30,7 +30,7 @@ cd JYstore-Tultle
 ### 安装依赖
 
 > [!WARNING]
-> NoneBot 自 2.2.0 起兼容了 Pydantic v1 与 v2 版本, 本项目使用 v1 版本
+> NoneBot 自 2.2.0 起兼容了 Pydantic v1 与 v2 版本，本项目使用 v1 版本
 > 
 > 如果在运行的过程中遇到 Pydantic 相关警告或报错，例如：
 > ```python
@@ -102,11 +102,11 @@ nb run
 
 ### 如何后台运行？
 
-推荐使用`tmux`工具。[Linux tmux 終端機管理工具使用教學](https://blog.gtwang.org/linux/linux-tmux-terminal-multiplexer-tutorial/)
+推荐使用`tmux`工具<br>[Linux tmux 終端機管理工具使用教學](https://blog.gtwang.org/linux/linux-tmux-terminal-multiplexer-tutorial/)
 
 ## 配置项
 
-配置方式：直接在 NoneBot 全局配置文件中添加以下配置项即可。
+配置方式：直接在 NoneBot 全局配置文件中添加以下配置项即可
 
 ### 服务器状态查看
 
