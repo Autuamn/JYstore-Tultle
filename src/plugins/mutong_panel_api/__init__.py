@@ -20,8 +20,8 @@ __plugin_meta__ = PluginMetadata(
 global_config = get_driver().config
 config = Config.parse_obj(global_config)
 
-CLIENT_API = config.panel_client_api
-API_KEY = config.panel_api_key
+CLIENT_API = config.mutong_panel_client_api
+API_KEY = config.mutong_panel_api_key
 HEADEARS = {
     "Authorization": f"Bearer {API_KEY}",
     "Accept": "Application/vnd.pterodactyl.v1+json",

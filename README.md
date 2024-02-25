@@ -114,10 +114,10 @@ nb run
 
 ### mutong_panel_api
 
-- panel_client_api
+- mutong_panel_client_api
 
     ```dotenv
-    panel_client_api=https://vat-panel.yunqiaold.com/api/client/servers/xxx
+    mutong_panel_client_api=https://vat-panel.yunqiaold.com/api/client/servers/xxx
     ```
 
     翼龙面板api的链接，`xxx`为控制台网址的最后一段
@@ -125,28 +125,28 @@ nb run
     例如：<br>
     服务器控制台的地址为`https://vat-panel.yunqiaold.com/server/1a7ce997`，则`xxx`就为`1a7ce997`
 
-- panel_api_key
+- mutong_panel_api_key
 
     ```dotenv
-    panel_api_key=xxx
+    mutong_panel_api_key=xxx
     ```
 
     面板账户的 **API 密钥**，可在`账号设置（点击头像）- API 凭证`处获取
 
 ### recode_picture
 
-- enable_guild_id
+- recode_picture_enable_guild_id
 
     ```dotenv
-    enable_guild_id=["xxx", "xxx"]
+    recode_picture_enable_guild_id=["xxx", "xxx"]
     ```
 
     控制启用的频道
 
-- enable_chinnel_id
+- recode_picture_enable_chinnel_id
 
     ```dotenv
-    enable_chinnel_id=["xxx", "xxx"]
+    recode_picture_enable_chinnel_id=["xxx", "xxx"]
     ```
 
     控制启用的子频道

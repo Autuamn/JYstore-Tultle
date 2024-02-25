@@ -1,6 +1,7 @@
+from typing import List
 from pydantic import BaseModel, Extra
 
 
 class Config(BaseModel, extra=Extra.ignore):
-    enable_guild_id: list
-    enable_chinnel_id: list
+    recode_picture_enable_guild_id: List[str] = []
+    recode_picture_enable_chinnel_id: List[str] = []

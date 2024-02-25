@@ -2,8 +2,8 @@ from pydantic import BaseModel, Extra
 
 
 class Config(BaseModel, extra=Extra.ignore):
-    panel_client_api: str
-    panel_api_key: str
+    mutong_panel_client_api: str
+    mutong_panel_api_key: str
 
 
 signal_mapping = {

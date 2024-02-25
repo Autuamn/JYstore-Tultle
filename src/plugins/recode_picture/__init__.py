@@ -16,8 +16,8 @@ __plugin_meta__ = PluginMetadata(
 global_config = get_driver().config
 config = Config.parse_obj(global_config)
 
-enable_chinnel_id = config.enable_chinnel_id
-enable_guild_id = config.enable_guild_id
+enable_guild_id = config.recode_picture_enable_guild_id
+enable_chinnel_id = config.recode_picture_enable_chinnel_id
 pic_map: list[str] = []  # 保存图片url
 
 
