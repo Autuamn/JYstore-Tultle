@@ -9,12 +9,13 @@ from pytz import timezone
 
 from nonebot import get_driver
 from nonebot.log import logger
-
+from nonebot.adapters.qq import Message, MessageSegment
+"""
 try:
     from nonebot.adapters.onebot.v11 import Message, MessageSegment  # type: ignore
 except ImportError:
     from nonebot.adapters.cqhttp import Message, MessageSegment  # type: ignore
-
+"""
 RES_PARENT = getattr(get_driver().config, "resources_dir", None)
 if RES_PARENT and Path(RES_PARENT).exists():
     res_path = Path(RES_PARENT) / "epicfree"
@@ -98,7 +99,7 @@ async def get_epic_free() -> List[MessageSegment]:
 
     games = await query_epic_api()
     if not games:
-        return  "Epic 可能又抽风啦，请稍后再试（"
+        return  [MessageSegment.text("Epic 可能又抽风啦，请稍后再试（")]
         
     else:
         logger.debug(
@@ -166,7 +167,7 @@ async def get_epic_free() -> List[MessageSegment]:
         '''msg_list.insert(
             0,
            f"{game_cnt} 款游戏现在免费！" if game_cnt else "暂未找到正在促销的游戏...")'''
-        return str(msg_list)
+        return [MessageSegment.text(f"{msg}\n") for msg in msg_list]
 
 
 def check_push(msg: List[MessageSegment]) -> bool:

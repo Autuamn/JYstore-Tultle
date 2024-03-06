@@ -2,13 +2,13 @@ import aiohttp
 import json
 from io import StringIO
 
-from nonebot import get_driver, on_command
+from nonebot import on_command
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.adapters import Message
 from nonebot.plugin import PluginMetadata
 
-from .config import Config, signal_mapping, key_mapping
+from .config import plugin_config, Config, signal_mapping, key_mapping
 
 __plugin_meta__ = PluginMetadata(
     name="mutong-panel_api",
@@ -17,11 +17,9 @@ __plugin_meta__ = PluginMetadata(
     config=Config,
 )
 
-global_config = get_driver().config
-config = Config.parse_obj(global_config)
 
-CLIENT_API = config.mutong_panel_client_api
-API_KEY = config.mutong_panel_api_key
+CLIENT_API = plugin_config.mutong_panel_client_api
+API_KEY = plugin_config.mutong_panel_api_key
 HEADEARS = {
     "Authorization": f"Bearer {API_KEY}",
     "Accept": "Application/vnd.pterodactyl.v1+json",
