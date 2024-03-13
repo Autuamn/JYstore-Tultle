@@ -39,11 +39,11 @@ async def http_post(url, headers, data):
             return response.status, await response.text()
 
 
-mcsm_power = on_command("mcsmPower", rule=to_me())
-mcsm_usage = on_command("mcsmUsage", rule=to_me())
-mcsm_log = on_command("mcsmLog", rule=to_me())
-mcsm_apiChack = on_command("mcsmApiChack", rule=to_me())
-mcsm_command = on_command("mcsmCommand", rule=to_me())
+mcsm_power = on_command("mcsmPower", rule=to_me(), priority=0, block=True)
+mcsm_usage = on_command("mcsmUsage", rule=to_me(), priority=0, block=True)
+mcsm_log = on_command("mcsmLog", rule=to_me(), priority=0, block=True)
+mcsm_apiChack = on_command("mcsmApiChack", rule=to_me(), priority=0, block=True)
+mcsm_command = on_command("mcsmCommand", rule=to_me(), priority=0, block=True)
 
 
 @mcsm_power.handle()

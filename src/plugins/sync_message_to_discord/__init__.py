@@ -1,8 +1,10 @@
 import os
 import sqlite3
+import asyncio
 from typing import Dict, List
 
 from nonebot import logger, get_driver, on_message, on
+from nonebot.rule import Rule, to_me
 from nonebot.plugin import PluginMetadata
 from nonebot.adapters.qq import (
     Bot as qq_Bot,
@@ -56,8 +58,7 @@ async def check_delete(bot: qq_Bot, event: qq_MessageDeleteEvent) -> bool:
         and event.message.channel_id in channel_links.keys()
     )
 
-
-matcher = on_message(rule=check_message, block=False)
+matcher = on_message(rule=check_message, priority=100, block=False)
 delete = on(rule=check_delete, block=False)
 
 
@@ -80,7 +81,14 @@ async def qq_handle(
     username = f"{event.author.username} [ID:{event.author.id}]"
     avatar = event.author.avatar
 
-    send = await send_to_discord(dc_bot, webhook_id, webhook_token, text, img_list, embeds, username, avatar)
+    while True:
+        try:
+            send = await send_to_discord(dc_bot, webhook_id, webhook_token, text, img_list, embeds, username, avatar)
+            break
+        except NameError:
+            await asyncio.sleep(5)
+            pass
+
     if send:
         c.execute(
             "INSERT INTO ID (DCID, QQID) VALUES (?, ?)",

@@ -120,16 +120,35 @@ async def send_to_discord(
     else:
         files = None
 
-    send = await bot.execute_webhook(
-        webhook_id=webhook_id,
-        token=token,
-        content=text or "",
-        files=files,
-        embeds=embed,
-        username=username,
-        avatar_url=avatar_url,
-        wait=True
-    )
+    try_times = 0
+    
+    while try_times < 3:
+        try:
+            send = await bot.execute_webhook(
+                webhook_id=webhook_id,
+                token=token,
+                content=text or "",
+                files=files,
+                embeds=embed,
+                username=username,
+                avatar_url=avatar_url,
+                wait=True
+            )
+            break
+        except:
+            await asyncio.sleep(5)
+            try_times += 1
+            if try_times == 3:
+                send = await bot.execute_webhook(
+                    webhook_id=webhook_id,
+                    token=token,
+                    content=text or "",
+                    files=files,
+                    embeds=embed,
+                    username=username,
+                    avatar_url=avatar_url,
+                    wait=True
+                )
 
     logger.debug("send")
     return send
