@@ -28,20 +28,6 @@ cd JYstore-Tultle
 ```
 
 ### 安装依赖
-
-> [!WARNING]
-> NoneBot 自 2.2.0 起兼容了 Pydantic v1 与 v2 版本，本项目使用 v1 版本
-> 
-> 如果在运行的过程中遇到 Pydantic 相关警告或报错，例如：
-> ```python
-> pydantic_core._pydantic_core.ValidationError: 1 validation error for Config
->   Input should be a valid dictionary or instance of Config [type=model_type, input_value=Config(...), input_type=Config]
-> ```
-> 请考虑降级 Pydantic 至 v1 版本：
-> ```bash
-> pip install --force-reinstall 'pydantic~=1.10'
-> ```
-
 1. （可选）创建虚拟环境，以 venv 为例
 
     ```bash
