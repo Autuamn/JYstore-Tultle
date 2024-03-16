@@ -1,7 +1,10 @@
 from typing import List
-from pydantic import BaseModel, Extra
+from nonebot import get_plugin_config
+from pydantic import BaseModel
 
 
-class Config(BaseModel, extra=Extra.ignore):
+class Config(BaseModel):
     recode_picture_enable_guild_id: List[str] = []
     recode_picture_enable_chinnel_id: List[str] = []
+
+plugin_config = get_plugin_config(Config)

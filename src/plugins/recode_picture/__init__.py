@@ -1,10 +1,10 @@
-from nonebot import get_driver, on_command, on_message
+from nonebot import on_command, on_message
 from nonebot.rule import to_me
 from nonebot.params import CommandArg
 from nonebot.plugin import PluginMetadata
 from nonebot.adapters.qq import Bot, Message, GuildMessageEvent
 
-from .config import Config
+from .config import plugin_config, Config
 
 __plugin_meta__ = PluginMetadata(
     name="recode_message",
@@ -13,11 +13,9 @@ __plugin_meta__ = PluginMetadata(
     config=Config,
 )
 
-global_config = get_driver().config
-config = Config.parse_obj(global_config)
 
-enable_guild_id = config.recode_picture_enable_guild_id
-enable_chinnel_id = config.recode_picture_enable_chinnel_id
+enable_guild_id = plugin_config.recode_picture_enable_guild_id
+enable_chinnel_id = plugin_config.recode_picture_enable_chinnel_id
 pic_map: list[str] = []  # 保存图片url
 
 

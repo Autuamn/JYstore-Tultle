@@ -18,7 +18,7 @@ __plugin_meta__ = PluginMetadata(
     usage="",
 )
 
-epic = on_command("epic", rule=to_me())
+epic = on_command("epic", rule=to_me(), priority=0, block=True)
 
 
 from .data_source import get_epic_free  # noqa: E402
@@ -27,5 +27,3 @@ from .data_source import get_epic_free  # noqa: E402
 async def epic_handle(bot: Bot, event: GuildMessageEvent):
     free = await get_epic_free()
     await epic.finish(free)  # type: ignore
-
-    
