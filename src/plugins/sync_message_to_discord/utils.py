@@ -45,7 +45,7 @@ async def get_message(
             text += str(msg.data["text"])
         elif msg.type == "emoji":
             # 表情
-            text += f"[{qq_emoji_dict.get(msg.data['id'], "N/A")}]"
+            text += f"[{qq_emoji_dict.get(msg.data['id'], 'N/A')}]"
         elif msg.type == "mention_user":
             # @人
             text += (
@@ -83,7 +83,7 @@ async def get_embeds(
     channel_id = channel_links[event.channel_id].channel_id
 
     author = EmbedAuthor(
-        name=f"{reference_message.author.username or ""} [ID:{reference_message.author.id}]",
+        name=f"{reference_message.author.username or ''} [ID:{reference_message.author.id}]",
         icon_url=(reference_member.user.avatar if reference_member.user else "") or "",
     )
     description = (
