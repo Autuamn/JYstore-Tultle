@@ -55,7 +55,7 @@ cd JYstore-Tultle
     ```bash
     pip install nonebot_plugin_status
     ```
- 
+
 ### 创建配置文件
 
 在**项目文件夹**创建一个`.env`文件，并写入以下内容：

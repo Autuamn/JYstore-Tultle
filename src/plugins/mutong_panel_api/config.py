@@ -6,6 +6,7 @@ class Config(BaseModel):
     mutong_panel_client_api: str
     mutong_panel_api_key: str
 
+
 plugin_config = get_plugin_config(Config)
 
 signal_mapping = {

@@ -1,9 +1,10 @@
 [project]
 name = "JYstore-Tultle"
-version = "0.1.0"
+version = "1.0.1"
 description = "Just a tultle"
 readme = "README.md"
-requires-python = ">=3.8, <4.0"
+requires-python = ">=3.9, <4.0"
+
 
 [tool.nonebot]
 adapters = [
@@ -14,3 +15,57 @@ adapters = [
 plugins = ["nonebot_plugin_status"]
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
+
+
+[tool.poetry]
+name = "jystore-tultle"
+version = "1.0.1"
+description = "Just a tultle"
+authors = ["Autuamn <autuamn@qq.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+nonebot2 = {extras = ["aiohttp"], version = "^2.2.1"}
+nonebot-adapter-kaiheila = "^0.3.3"
+nonebot-adapter-qq = "^1.4.2"
+nonebot-adapter-discord = {git = "https://github.com/Autuamn/adapter-discord.git", rev = "it_works"}
+nonebot-plugin-status = "^0.8.1"
+filetype = "^1.2.0"
+pytz = "^2024.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.3"
+nonemoji = "^0.1.4"
+pre-commit = "^3.6.2"
+isort = "^5.13.2"
+black = "^24.3.0"
+
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "C", "T", "PYI", "PT"]
+ignore = ["E402", "F403", "F405", "C901", "PYI021", "PYI048", "W191", "E501"]
+ignore-init-module-imports = true
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+extra-standard-library = ["typing_extensions"]
+combine-as-imports = true
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+section-order = [
+    "future",
+    "standard-library",
+    "first-party",
+    "third-party",
+    "local-folder",
+]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

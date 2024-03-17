@@ -4,4 +4,5 @@
 *.pyc
 
 !.gitignore
+!.pre-commit-config.yaml
 !pyproject.toml

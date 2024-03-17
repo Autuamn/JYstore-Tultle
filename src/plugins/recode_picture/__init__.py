@@ -1,10 +1,10 @@
 from nonebot import on_command, on_message
-from nonebot.rule import to_me
+from nonebot.adapters.qq import Bot, GuildMessageEvent, Message
 from nonebot.params import CommandArg
 from nonebot.plugin import PluginMetadata
-from nonebot.adapters.qq import Bot, Message, GuildMessageEvent
+from nonebot.rule import to_me
 
-from .config import plugin_config, Config
+from .config import Config, plugin_config
 
 __plugin_meta__ = PluginMetadata(
     name="recode_message",

@@ -1,21 +1,15 @@
-import json
 from datetime import datetime
+import json
 from pathlib import Path
 from traceback import format_exc
-from typing import Dict, List, Literal, Union
+from typing import Literal, Union
 
-from httpx import AsyncClient
+from aiohttp import ClientSession
+from nonebot import get_driver
+from nonebot.adapters import MessageSegment
+from nonebot.log import logger
 from pytz import timezone
 
-from nonebot import get_driver
-from nonebot.log import logger
-from nonebot.adapters.qq import Message, MessageSegment
-"""
-try:
-    from nonebot.adapters.onebot.v11 import Message, MessageSegment  # type: ignore
-except ImportError:
-    from nonebot.adapters.cqhttp import Message, MessageSegment  # type: ignore
-"""
 RES_PARENT = getattr(get_driver().config, "resources_dir", None)
 if RES_PARENT and Path(RES_PARENT).exists():
     res_path = Path(RES_PARENT) / "epicfree"
@@ -27,8 +21,10 @@ PUSHED = res_path / "last_pushed.json"
 
 
 async def subscribe_helper(
-    method: Literal["读取", "启用", "删除"] = "读取", sub_type: str = "", subject: str = ""
-) -> Union[Dict, str]:
+    method: Literal["读取", "启用", "删除"] = "读取",
+    sub_type: str = "",
+    subject: str = "",
+) -> Union[dict, str]:
     """写入与读取订阅配置"""
 
     if CACHE.exists():
@@ -61,36 +57,38 @@ async def subscribe_helper(
         return f"{sub_type}{subject} Epic 限免游戏资讯订阅{method}失败惹.."
 
 
-async def query_epic_api() -> List:
+async def query_epic_api() -> list:
     """
     获取所有 Epic Game Store 促销游戏
 
     参考 RSSHub ``/epicgames`` 路由 https://github.com/DIYgod/RSSHub/blob/master/lib/v2/epicgames/index.js
     """
-
-    async with AsyncClient(proxies={"all://": None}) as client:
+    async with ClientSession(
+        headers={
+            "Referer": "https://www.epicgames.com/store/zh-CN/",
+            "Content-Type": "application/json; charset=utf-8",
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+                " (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
+            ),
+        }
+    ) as session:
         try:
-            res = await client.get(
+            async with session.get(
                 "https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions",
                 params={"locale": "zh-CN", "country": "CN", "allowCountries": "CN"},
-                headers={
-                    "Referer": "https://www.epicgames.com/store/zh-CN/",
-                    "Content-Type": "application/json; charset=utf-8",
-                    "User-Agent": (
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-                        " (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
-                    ),
-                },
                 timeout=10.0,
-            )
-            res_json = res.json()
-            return res_json["data"]["Catalog"]["searchStore"]["elements"]
+            ) as response:
+                res_json = await response.json()
+                return res_json["data"]["Catalog"]["searchStore"]["elements"]
         except Exception as e:
-            logger.error(f"请求 Epic Store API 错误 {e.__class__.__name__}\n{format_exc()}")
+            logger.error(
+                f"请求 Epic Store API 错误 {e.__class__.__name__}\n{format_exc()}"
+            )
             return []
 
 
-async def get_epic_free() -> List[MessageSegment]:
+async def get_epic_free() -> str:
     """
     获取 Epic Game Store 免费游戏信息
 
@@ -99,13 +97,13 @@ async def get_epic_free() -> List[MessageSegment]:
 
     games = await query_epic_api()
     if not games:
-        return  [MessageSegment.text("Epic 可能又抽风啦，请稍后再试（")]
-        
+        return "Epic 可能又抽风啦，请稍后再试（"
+
     else:
         logger.debug(
             f"获取到 {len(games)} 个游戏数据：\n{('、'.join(game['title'] for game in games))}"
         )
-        game_cnt, msg_list = 0, []
+        game_cnt, msg = 0, ""
         for game in games:
             game_name = game.get("title", "未知")
             try:
@@ -113,14 +111,22 @@ async def get_epic_free() -> List[MessageSegment]:
                     continue
                 game_promotions = game["promotions"]["promotionalOffers"]
                 upcoming_promotions = game["promotions"]["upcomingPromotionalOffers"]
-                original_price = game["price"]["totalPrice"]["fmtPrice"]["originalPrice"]
-                discount_price = game["price"]["totalPrice"]["fmtPrice"]["discountPrice"]
+                original_price = game["price"]["totalPrice"]["fmtPrice"][
+                    "originalPrice"
+                ]
+                discount_price = game["price"]["totalPrice"]["fmtPrice"][
+                    "discountPrice"
+                ]
                 if not game_promotions:
                     if upcoming_promotions:
-                        logger.info(f"跳过即将推出免费游玩的游戏：{game_name}({discount_price})")
+                        logger.info(
+                            f"跳过即将推出免费游玩的游戏：{game_name}({discount_price})"
+                        )
                     continue  # 仅返回正在推出免费游玩的游戏
                 elif game["price"]["totalPrice"]["fmtPrice"]["discountPrice"] != "0":
-                    logger.info(f"跳过促销但不免费的游戏：{game_name}({discount_price})")
+                    logger.info(
+                        f"跳过促销但不免费的游戏：{game_name}({discount_price})"
+                    )
                     continue
                 # 处理游戏发行信息
                 game_dev, game_pub = game["seller"]["name"], game["seller"]["name"]
@@ -143,37 +149,32 @@ async def get_epic_free() -> List[MessageSegment]:
                     .strftime("%m {m} %d {d} %H:%M")
                     .format(m="月", d="日")
                 )
-               
+
                 game_cnt += 1
-                msg_list.extend(
-                    [
-                        
-                                "{} ({})游戏{}" "将在 {} 结束免费领取~".format(
-                                    game_name,
-                                    original_price,
-                                    companies,
-                                    end_date,
-                                
-                            
-                        ),
-                    ]
-                )
+                msg += f"{game_name} ({original_price})游戏{companies}，将在 {end_date} 结束免费领取~\n"
+
             except (AttributeError, IndexError, TypeError):
-                logger.debug(f"处理游戏 {game_name} 时遇到应该忽略的错误\n{format_exc()}")
+                logger.debug(
+                    f"处理游戏 {game_name} 时遇到应该忽略的错误\n{format_exc()}"
+                )
                 pass
             except Exception as e:
-                logger.error(f"组织 Epic 订阅消息错误 {e.__class__.__name__}\n{format_exc()}")
+                logger.error(
+                    f"组织 Epic 订阅消息错误 {e.__class__.__name__}\n{format_exc()}"
+                )
         # 返回整理为 CQ 码的消息字符串
-        '''msg_list.insert(
-            0,
-           f"{game_cnt} 款游戏现在免费！" if game_cnt else "暂未找到正在促销的游戏...")'''
-        return [MessageSegment.text(f"{msg}\n") for msg in msg_list]
+        msg = (
+            f"{game_cnt} 款游戏现在免费！\n"
+            if game_cnt
+            else "暂未找到正在促销的游戏..."
+        ) + msg
+        return msg
 
 
-def check_push(msg: List[MessageSegment]) -> bool:
+def check_push(msg: list[MessageSegment]) -> bool:
     """检查是否需要重新推送"""
 
-    last_text: List[str] = (
+    last_text: list[str] = (
         json.loads(PUSHED.read_text(encoding="UTF-8")) if PUSHED.exists() else []
     )
     _msg_text = [x.data["content"][0].data.get("text") for x in msg]

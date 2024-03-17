@@ -1,14 +1,14 @@
-import aiohttp
-import json
 from io import StringIO
+import json
 
+import aiohttp
 from nonebot import on_command
-from nonebot.rule import to_me
-from nonebot.params import CommandArg
 from nonebot.adapters import Message
+from nonebot.params import CommandArg
 from nonebot.plugin import PluginMetadata
+from nonebot.rule import to_me
 
-from .config import plugin_config, Config, signal_mapping, key_mapping
+from .config import Config, key_mapping, plugin_config, signal_mapping
 
 __plugin_meta__ = PluginMetadata(
     name="mutong-panel_api",
@@ -63,9 +63,15 @@ async def mcsm_power_function(args: Message = CommandArg()):
 async def mcsm_usage_function(args: Message = CommandArg()):
     usage_api = f"{CLIENT_API}/resources"
     status_code, response_text = await http_get(usage_api, HEADEARS)
-    await mcsm_usage.finish(f"{status_code}\n{response_text}") if status_code != 200 else None
+    (
+        await mcsm_usage.finish(f"{status_code}\n{response_text}")
+        if status_code != 200
+        else None
+    )
     response_json = json.loads(response_text)
-    specified_key = key_mapping.get(args if isinstance(args, str) else args.extract_plain_text(), None)
+    specified_key = key_mapping.get(
+        args if isinstance(args, str) else args.extract_plain_text(), None
+    )
     if specified_key is None:
         await mcsm_usage.finish(response_text)
     else:
