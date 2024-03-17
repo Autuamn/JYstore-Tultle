@@ -147,7 +147,7 @@ nb run
 ### sync_message_to_discord
 
 - enable_guild_id
-    
+
     ```dotenv
     enable_guild_id=["123", "456"]
     ```
