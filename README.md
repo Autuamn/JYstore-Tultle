@@ -8,18 +8,20 @@
 
 - [QQ](https://github.com/nonebot/adapter-qq)
 - [Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila)
+- [Discord](https://github.com/nonebot/adapter-discord)
 
 ### 已安装插件：
 
 - [服务器状态查看](https://github.com/cscs181/QQ-GitHub-Bot/tree/master/src/plugins/nonebot_plugin_status)
 
 ### 自制插件：
+- epicfree：获取 Epic Game 免费游戏
 - mutong_panel_api：控制[木桶面板](https://vat.yunqiaold.com/index.php)的翼龙面板api
 - recode_picture：记录发送过的图片，并返回图片的直链
+- sync_message_to_discord：向 Discord 同步消息（单向）
 
 ## 使用
-
-本项目基于 nb-cli 脚手架运行，请先安装 nb-cli，详见[NoneBot 快速上手](https://nonebot.dev/docs/quick-start)
+本项目基于 nb-cli 脚手架运行，请先安装 nb-cli ，详见[NoneBot 快速上手](https://nonebot.dev/docs/quick-start)
 
 ### 下载项目
 ```bash
@@ -28,33 +30,25 @@ cd JYstore-Tultle
 ```
 
 ### 安装依赖
+本项目使用 poetry 管理依赖，请确保安装了 poetry
+
+
 1. （可选）创建虚拟环境，以 venv 为例
 
     ```bash
-    python -m venv .venv --prompt nonebot2
+    python -m venv .venv --prompt JYT
     # windows
     .venv\Scripts\activate
     # linux/macOS
     source .venv/bin/activate
     ```
 
-2. 安装 nonebot2 以及驱动器
+2. 使用 poetry 安装依赖
 
    ```bash
-   pip install 'nonebot2[aiohttp]'
+   poetry shell
+   poetry install
    ```
-
-3. 安装适配器
-
-    ```bash
-    pip install nonebot-adapter-qq nonebot-adapter-kaiheila
-    ```
-
-4. 安装插件
-
-    ```bash
-    pip install nonebot_plugin_status
-    ```
 
 ### 创建配置文件
 
@@ -75,10 +69,23 @@ QQ_BOTS='
   }
 ]
 '
+DISCORD_BOTS='
+[
+  {
+    "token": "xxx",
+    "intent": {
+      "guild_messages": true,
+      "direct_messages": true
+    },
+    "application_commands": {"*": ["*"]}
+  }
+]
+'
 kaiheila_bots =[{"token": "xxx"}]
 ```
+如果无法直接访问Discord还需加上`DISCORD_PROXY`设置代理
 
-更多详细参数请见各适配器的说明：[QQ](https://github.com/nonebot/adapter-qq)、[Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila/blob/master/MANUAL.md)
+更多详细参数请见各适配器的说明：[QQ](https://github.com/nonebot/adapter-qq)、[Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila/blob/master/MANUAL.md)、[Discord](https://github.com/nonebot/adapter-discord)
 
 ### 运行机器人
 
@@ -88,7 +95,7 @@ nb run
 
 ### 如何后台运行？
 
-推荐使用`tmux`工具<br>[Linux tmux 終端機管理工具使用教學](https://blog.gtwang.org/linux/linux-tmux-terminal-multiplexer-tutorial/)
+推荐使用 tmux 工具<br>[Linux tmux 終端機管理工具使用教學](https://blog.gtwang.org/linux/linux-tmux-terminal-multiplexer-tutorial/)
 
 ## 配置项
 
@@ -117,14 +124,14 @@ nb run
     mutong_panel_api_key=xxx
     ```
 
-    面板账户的 **API 密钥**，可在`账号设置（点击头像）- API 凭证`处获取
+    面板账户的 **API 密钥**，可在“账号设置（点击头像）- API 凭证”处获取
 
 ### recode_picture
 
 - recode_picture_enable_guild_id
 
     ```dotenv
-    recode_picture_enable_guild_id=["xxx", "xxx"]
+    recode_picture_enable_guild_id=["123", "456"]
     ```
 
     控制启用的频道
@@ -132,10 +139,39 @@ nb run
 - recode_picture_enable_chinnel_id
 
     ```dotenv
-    recode_picture_enable_chinnel_id=["xxx", "xxx"]
+    recode_picture_enable_chinnel_id=["123", "456"]
     ```
 
     控制启用的子频道
+
+### sync_message_to_discord
+
+- enable_guild_id
+    
+    ```dotenv
+    enable_guild_id=["123", "456"]
+    ```
+
+    控制启用的频道
+
+- channel_bind
+
+    ```dotenv
+    channel_bind='{
+        "123": {
+            "channel_id": 123,
+            "webhook_id": 123,
+            "webhook_token": "xxx"
+        },
+        "456": {
+            "channel_id": 456,
+            "webhook_id": 456,
+            "webhook_token": "xxx"
+        }
+    }'
+    ```
+
+    绑定QQ子频道和Discode频道，需要自行准备好 [WebHook](https://discord.com/developers/docs/resources/webhook)
 
 ## More
 
