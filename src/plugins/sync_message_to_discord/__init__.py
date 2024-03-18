@@ -72,12 +72,11 @@ async def qq_handle(
     bot: qq_Bot,
     event: qq_GuildMessageEvent,
 ):
-    c = conn.cursor()
     logger.debug("qq_handle")
     text, img_list = await get_message(bot, event)
 
     if reference := event.message_reference:
-        embeds = await get_embeds(bot, event, reference, c, channel_links)
+        embeds = await get_embeds(bot, event, reference, conn, channel_links)
     else:
         embeds = None
 
@@ -108,7 +107,7 @@ async def qq_handle(
             await asyncio.sleep(5)
 
     if send:
-        c.execute(
+        conn.execute(
             "INSERT INTO ID (DCID, QQID) VALUES (?, ?)",
             (send.id, event.id),
         )
@@ -116,15 +115,23 @@ async def qq_handle(
 
 @delete.handle()
 async def delete_handel(bot: qq_Bot, event: qq_MessageDeleteEvent):
-    c = conn.cursor()
-    db_selected = c.execute(
-        f"SELECT DCID FROM ID WHERE QQID LIKE ('%{event.message.id}%')"
-    )
-    for msgid in db_selected:
-        message_id = int(msgid[0])
-    channel_id = int(channel_links[event.message.channel_id].channel_id)
-    await delete_discord_message(dc_bot, message_id, channel_id)
-    c.execute(f"DELETE FROM ID WHERE DCID={message_id}")
+    try_times = 0
+    while True:
+        try:
+            db_selected = conn.execute(
+                f"SELECT DCID FROM ID WHERE QQID LIKE ('%{event.message.id}%')"
+            )
+            msgids = db_selected.fetchone()
+            for msgid in msgids:
+                channel_id = channel_links[event.message.channel_id].channel_id
+                await delete_discord_message(dc_bot, msgid, channel_id)
+                conn.execute(f"DELETE FROM ID WHERE DCID={msgid}")
+            break
+        except [UnboundLocalError | TypeError] as e:
+            try_times += 1
+            if try_times == 3:
+                raise e
+            await asyncio.sleep(5)
 
 
 @driver.on_shutdown

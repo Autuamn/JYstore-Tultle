@@ -1,5 +1,5 @@
 import asyncio
-from sqlite3 import Cursor
+from sqlite3 import Connection
 from typing import Optional
 
 import aiohttp
@@ -46,7 +46,9 @@ async def get_message(
             text += str(msg.data["text"])
         elif msg.type == "emoji":
             # 表情
-            text += f"[{qq_emoji_dict.get(msg.data['id'], 'N/A')}]"
+            text += (
+                f"[{qq_emoji_dict.get(msg.data['id'], 'QQemojiID:' + msg.data['id'])}]"
+            )
         elif msg.type == "mention_user":
             # @人
             text += (
@@ -65,41 +67,34 @@ async def get_embeds(
     bot: qq_Bot,
     event: qq_GuildMessageEvent,
     reference: MessageReference,
-    c: Cursor,
+    conn: Connection,
     channel_links: dict[str, DiscordConfig],
 ) -> list[Embed]:
-    reference_message = await bot.get_message_of_id(
+    qq_message = await bot.get_message_of_id(
         channel_id=event.channel_id, message_id=reference.message_id
     )
-    reference_member = await bot.get_member(
-        guild_id=reference_message.guild_id, user_id=reference_message.author.id
+    qq_member = await bot.get_member(
+        guild_id=qq_message.guild_id, user_id=qq_message.author.id
     )
-
-    db_selected = c.execute(
-        f"SELECT DCID FROM ID WHERE QQID LIKE ('%{reference.message_id}%')"
-    )
-    for selected in db_selected:
-        reference_id = selected[0]
 
     channel_id = channel_links[event.channel_id].channel_id
 
+    db_selected = conn.execute(
+        f"SELECT DCID FROM ID WHERE QQID LIKE ('%{reference.message_id}%')"
+    )
+    reference_id = db_selected.fetchone()[0]
+
     author = EmbedAuthor(
-        name=f"{reference_message.author.username or ''} [ID:{reference_message.author.id}]",
-        icon_url=(reference_member.user.avatar if reference_member.user else "") or "",
+        name=f"{qq_message.author.username or ''} [ID:{qq_message.author.id}]",
+        icon_url=(qq_member.user.avatar if qq_member.user else "") or "",
     )
-    description = (
-        f"{reference_message.content}\n\n"
-        + (
-            f"<t:{int(reference_message.timestamp.timestamp())}:R>"
-            if reference_message.timestamp
-            else ""
-        )
-        + (
-            f"[[ ↑ ]](https://discord.com/channels/1171294052839333910/{channel_id}/{reference_id})"
-            if reference_id
-            else "[ ? ]"
-        )
+    description = f"{qq_message.content}\n\n" + (
+        f"<t:{int(qq_message.timestamp.timestamp())}:R>" if qq_message.timestamp else ""
     )
+    try:
+        description += f"[[ ↑ ]](https://discord.com/channels/1171294052839333910/{channel_id}/{reference_id})"
+    except UnboundLocalError:
+        description += "[ ? ]"
 
     embeds = [
         Embed(
@@ -142,10 +137,10 @@ async def send_to_discord(
                 wait=True,
             )
             break
-        except NetworkError:
+        except NetworkError as e:
             try_times += 1
             if try_times == 3:
-                raise NetworkError
+                raise e
             await asyncio.sleep(5)
 
     logger.debug("send")
