@@ -7,6 +7,7 @@ import filetype
 from nonebot import logger
 from nonebot.adapters.discord import Bot as dc_Bot
 from nonebot.adapters.discord.api import Embed, EmbedAuthor, File, MessageGet
+from nonebot.adapters.discord.exception import NetworkError
 from nonebot.adapters.qq import Bot as qq_Bot, GuildMessageEvent as qq_GuildMessageEvent
 from nonebot.adapters.qq.models import MessageReference
 
@@ -49,8 +50,8 @@ async def get_message(
         elif msg.type == "mention_user":
             # @人
             text += (
-                f"@[ID:{msg.data['user_id']}]"
-                + await get_member_name(bot, event, msg.data["user_id"])
+                f"@{await get_member_name(bot, event, msg.data['user_id'])}"
+                + f"[ID:{msg.data['user_id']}"
                 + " "
             )
         elif msg.type == "image":
@@ -127,35 +128,25 @@ async def send_to_discord(
     else:
         files = None
 
-    # try_times = 0
-
-    # while try_times < 3:
-    #    try:
-    send = await bot.execute_webhook(
-        webhook_id=webhook_id,
-        token=token,
-        content=text or "",
-        files=files,
-        embeds=embed,
-        username=username,
-        avatar_url=avatar_url,
-        wait=True,
-    )
-    #        break
-    """    except:
-            await asyncio.sleep(5)
+    try_times = 0
+    while True:
+        try:
+            send = await bot.execute_webhook(
+                webhook_id=webhook_id,
+                token=token,
+                content=text or "",
+                files=files,
+                embeds=embed,
+                username=username,
+                avatar_url=avatar_url,
+                wait=True,
+            )
+            break
+        except NetworkError:
             try_times += 1
             if try_times == 3:
-                send = await bot.execute_webhook(
-                    webhook_id=webhook_id,
-                    token=token,
-                    content=text or "",
-                    files=files,
-                    embeds=embed,
-                    username=username,
-                    avatar_url=avatar_url,
-                    wait=True,
-                )"""
+                raise NetworkError
+            await asyncio.sleep(5)
 
     logger.debug("send")
     return send
