@@ -2,7 +2,7 @@ import asyncio
 import os
 import sqlite3
 
-from nonebot import get_driver, logger, on, on_message
+from nonebot import get_driver, logger, on, on_message, on_regex
 from nonebot.adapters.discord import Bot as dc_Bot
 from nonebot.adapters.qq import (
     Bot as qq_Bot,
@@ -10,6 +10,7 @@ from nonebot.adapters.qq import (
     MessageDeleteEvent as qq_MessageDeleteEvent,
 )
 from nonebot.plugin import PluginMetadata
+from nonebot.rule import to_me
 
 from .config import Config, DiscordConfig, plugin_config
 from .init_db import init_db
@@ -63,8 +64,14 @@ async def check_delete(bot: qq_Bot, event: qq_MessageDeleteEvent) -> bool:
     )
 
 
-matcher = on_message(rule=check_message, priority=100, block=False)
-delete = on(rule=check_delete, block=False)
+unmatcher = on_regex(r"/.*", rule=to_me(), priority=1, block=True)
+matcher = on_message(rule=check_message, priority=10, block=False)
+delete = on(rule=check_delete)
+
+
+@unmatcher.handle()
+async def unmatcher_handle():
+    pass
 
 
 @matcher.handle()
