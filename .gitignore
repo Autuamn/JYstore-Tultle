@@ -5,4 +5,5 @@
 
 !.gitignore
 !.pre-commit-config.yaml
+!poetry.lock
 !pyproject.toml
