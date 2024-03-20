@@ -13,7 +13,7 @@ __plugin_meta__ = PluginMetadata(
     config=Config,
 )
 
-
+recode_file_url = plugin_config.recode_picture_recode_file_url
 enable_guild_id = plugin_config.recode_picture_enable_guild_id
 enable_chinnel_id = plugin_config.recode_picture_enable_chinnel_id
 pic_map: list[str] = []  # 保存图片url
@@ -74,4 +74,4 @@ async def send_pic_url(bot: Bot, args: Message = CommandArg()):
                     raise ValueError
             except ValueError:
                 await pic_url.finish("参数错误")
-        await pic_url.send("http://47.107.89.48:25565")
+        await pic_url.send(recode_file_url)

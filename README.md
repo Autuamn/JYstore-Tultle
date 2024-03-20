@@ -128,6 +128,16 @@ nb run
 
 ### recode_picture
 
+- recode_picture_recode_file_url
+
+    ```dotenv
+    recode_picture_recode_file_url="http://114.514.19.19:810"
+    ```
+
+    QQ官方机器人不能发域名url，只能用ip访问
+
+
+
 - recode_picture_enable_guild_id
 
     ```dotenv
