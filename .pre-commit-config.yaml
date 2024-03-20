@@ -24,7 +24,6 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        types_or: [javascript, jsx, ts, tsx, markdown, yaml, json]
         stages: [commit]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
