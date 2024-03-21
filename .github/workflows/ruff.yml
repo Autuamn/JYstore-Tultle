@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
   pull_request:
 
 jobs:
@@ -15,3 +17,5 @@ jobs:
 
       - name: Run Ruff Lint
         uses: chartboost/ruff-action@v1
+        with:
+          src: "./src"
