@@ -35,8 +35,7 @@ filetype = "^1.2.0"
 pytz = "^2024.1"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.3.3"
-nonemoji = "^0.1.4"
+ruff = "^0.3.4"
 pre-commit = "^3.6.2"
 
 
