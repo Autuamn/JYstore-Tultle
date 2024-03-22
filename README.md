@@ -32,21 +32,7 @@ cd JYstore-Tultle
 ### 安装依赖
 本项目使用 poetry 管理依赖，请确保安装了 poetry
 
-
-1. （可选）创建虚拟环境，以 venv 为例
-
-    ```bash
-    python -m venv .venv --prompt JYT
-    # windows
-    .venv\Scripts\activate
-    # linux/macOS
-    source .venv/bin/activate
-    ```
-
-2. 使用 poetry 安装依赖
-
    ```bash
-   poetry shell
    poetry install
    ```
 
