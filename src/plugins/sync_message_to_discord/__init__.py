@@ -32,8 +32,8 @@ async def get_dc_bot(bot: dc_Bot):
     dc_bot = bot
 
 
-enable_guild_id: list[str] = plugin_config.enable_guild_id
-channel_links: dict[str, DiscordConfig] = plugin_config.channel_bind
+enable_guild_id: list[str] = plugin_config.smd_enable_guild_id
+channel_links: dict[str, DiscordConfig] = plugin_config.smd_channel_bind
 discord_proxy = plugin_config.discord_proxy
 
 

@@ -11,9 +11,9 @@ class DiscordConfig(BaseModel):
 
 
 class Config(BaseModel):
-    enable_guild_id: list[str] = []
+    smd_enable_guild_id: list[str] = []
     """启用的频道ID"""
-    channel_bind: dict[str, DiscordConfig] = {}
+    smd_channel_bind: dict[str, DiscordConfig] = {}
     """子频道绑定"""
     discord_proxy: Optional[str] = None
 

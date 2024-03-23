@@ -142,7 +142,7 @@ nb run
 
 ### sync_message_to_discord
 
-- enable_guild_id
+- smd_enable_guild_id
 
     ```dotenv
     enable_guild_id=["123", "456"]
@@ -150,7 +150,7 @@ nb run
 
     控制启用的频道
 
-- channel_bind
+- smd_channel_bind
 
     ```dotenv
     channel_bind='{
