@@ -1,15 +1,13 @@
+from pathlib import Path
 import sqlite3
 
 
-async def init_db(dbpath: str):
-    createdb = open(dbpath, "w")
-    createdb.close()
+async def init_db(dbpath: Path):
     conn = sqlite3.connect(dbpath)
-    c = conn.cursor()
-    c.execute(
+    conn.execute(
         """CREATE TABLE ID (
-            DCID        INT     PRIMARY KEY     NOT NULL,
-            QQID        TEXT                    NOT NULL
+            DCID    INT     NOT NULL,
+            QQID    TEXT    NOT NULL
         );"""
     )
     return conn

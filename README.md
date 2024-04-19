@@ -12,13 +12,15 @@
 
 ### 已安装插件：
 
+- [本地数据存储](https://github.com/nonebot/plugin-localstore)
+- [定时任务](https://github.com/nonebot/plugin-apscheduler)
 - [服务器状态查看](https://github.com/cscs181/QQ-GitHub-Bot/tree/master/src/plugins/nonebot_plugin_status)
 
 ### 自制插件：
 - epicfree：获取 Epic Game 免费游戏
 - mutong_panel_api：控制[木桶面板](https://vat.yunqiaold.com/index.php)的翼龙面板api
 - recode_picture：记录发送过的图片，并返回图片的直链
-- sync_message_to_discord：向 Discord 同步消息（单向）
+- sync_message_to_discord：在QQ频道和 Discord 之间同步消息
 
 ## 使用
 本项目基于 nb-cli 脚手架运行，请先安装 nb-cli ，详见[NoneBot 快速上手](https://nonebot.dev/docs/quick-start)
@@ -69,7 +71,7 @@ DISCORD_BOTS='
 '
 kaiheila_bots =[{"token": "xxx"}]
 ```
-如果无法直接访问Discord还需加上`DISCORD_PROXY`设置代理
+如果无法直接访问 Discord 还需加上`DISCORD_PROXY`设置代理
 
 更多详细参数请见各适配器的说明：[QQ](https://github.com/nonebot/adapter-qq)、[Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila/blob/master/MANUAL.md)、[Discord](https://github.com/nonebot/adapter-discord)
 
@@ -87,9 +89,14 @@ nb run
 
 配置方式：直接在 NoneBot 全局配置文件中添加以下配置项即可
 
-### 服务器状态查看
+### 非自制插件的配置项请参考插件的主页
 
-此插件的配置详见[插件的介绍](https://github.com/cscs181/QQ-GitHub-Bot/tree/master/src/plugins/nonebot_plugin_status)
+需要注意的是，本项目的自制插件使用[本地数据存储](https://github.com/nonebot/plugin-localstore)存储数据。如需更改目录请在配置文件中加入
+```dotenv
+localstore_cache_dir=""   # 缓存目录
+localstore_config_dir=""  # 配置目录
+localstore_data_dir=""    # 数据目录
+```
 
 ### mutong_panel_api
 
@@ -99,7 +106,7 @@ nb run
     mutong_panel_client_api=https://vat-panel.yunqiaold.com/api/client/servers/xxx
     ```
 
-    翼龙面板api的链接，`xxx`为控制台网址的最后一段
+    翼龙面板 api 的链接，`xxx`为控制台网址的最后一段
 
     例如：<br>
     服务器控制台的地址为`https://vat-panel.yunqiaold.com/server/1a7ce997`，则`xxx`就为`1a7ce997`
@@ -120,7 +127,7 @@ nb run
     recode_picture_recode_file_url="http://114.514.19.19:810"
     ```
 
-    QQ官方机器人不能发域名url，只能用ip访问
+    QQ官方机器人不能发域名 url，只能用ip访问
 
 
 
@@ -142,32 +149,38 @@ nb run
 
 ### sync_message_to_discord
 
-- smd_enable_guild_id
+- smd_unmatch_beginning
 
     ```dotenv
-    enable_guild_id=["123", "456"]
+    smd_unmatch_beginning=["/", "!"]
     ```
-
-    控制启用的频道
+    指明不转发的消息开头，默认为`["/"]`
 
 - smd_channel_bind
 
     ```dotenv
-    channel_bind='{
-        "123": {
-            "channel_id": 123,
-            "webhook_id": 123,
-            "webhook_token": "xxx"
+    smd_channel_links=[
+        {
+            qq_guild_id: "123132",
+            dc_guild_id: 456456,
+            qq_channel_id: "78789",
+            dc_channel_id: 123123,
+            webhook_id: 456456,
+            webhook_token: "xxx"
         },
-        "456": {
-            "channel_id": 456,
-            "webhook_id": 456,
-            "webhook_token": "xxx"
+        {
+            qq_guild_id: str    # QQ频道 id
+            dc_guild_id: int    # Discord 服务器 id
+            qq_channel_id: str  # QQ子频道 id
+            dc_channel_id: int  # Discord 频道 id
+            webhook_id: int     # WebHook id
+            webhook_token: str  # WebHook token
+                                # 请不要将注释放在此处！！
         }
-    }'
+    ]
     ```
 
-    绑定QQ子频道和Discode频道，需要自行准备好 [WebHook](https://discord.com/developers/docs/resources/webhook)
+    绑定QQ子频道和 Discode 频道，需要自行准备好 [WebHook](https://discord.com/developers/docs/resources/webhook)
 
 ## More
 

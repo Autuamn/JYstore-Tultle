@@ -12,7 +12,7 @@ adapters = [
     {name = "开黑啦", module_name = "nonebot.adapters.kaiheila"},
     {name = "Discod", module_name = "nonebot.adapters.discord"}
 ]
-plugins = ["nonebot_plugin_status"]
+plugins = ["nonebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore"]
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
 
@@ -29,10 +29,13 @@ python = "^3.9"
 nonebot2 = {extras = ["aiohttp"], version = "^2.2.1"}
 nonebot-adapter-kaiheila = "^0.3.3"
 nonebot-adapter-qq = "^1.4.2"
-nonebot-adapter-discord = {git = "https://github.com/Autuamn/adapter-discord.git", rev = "it_works"}
 nonebot-plugin-status = "^0.8.1"
 filetype = "^1.2.0"
 pytz = "^2024.1"
+nonebot-adapter-discord = "^0.1.7"
+nonebot-plugin-apscheduler = "^0.4.0"
+nonebot-plugin-localstore = "^0.6.0"
+pillow = "^10.3.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.4"
