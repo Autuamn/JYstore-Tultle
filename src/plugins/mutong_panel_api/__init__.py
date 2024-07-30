@@ -39,6 +39,37 @@ async def http_post(url, headers, data):
             return response.status, await response.text()
 
 
+async def convert_milliseconds_to_time(milliseconds: int) -> tuple[int, int, int, int]:
+    seconds = milliseconds / 1000
+    minutes = seconds / 60
+    hours = minutes / 60
+    days = hours / 24
+
+    day_part = int(days)
+    hour_part = int(hours % 24)
+    minute_part = int(minutes % 60)
+    second_part = int(seconds % 60)
+
+    return day_part, hour_part, minute_part, second_part
+
+
+async def convert_bytes_to_size(bytes_count: int) -> str:
+    # 定义字节数量与量级之间的转换关系
+    KiB = 1024
+    MiB = KiB**2
+    GiB = KiB**3
+
+    # 根据字节数量选择合适的量级
+    if bytes_count < KiB:
+        return f"{bytes_count} bytes"
+    elif bytes_count < MiB:
+        return f"{bytes_count / KiB:.2f} KiB"
+    elif bytes_count < GiB:
+        return f"{bytes_count / MiB:.2f} MiB"
+    else:
+        return f"{bytes_count / GiB:.2f} GiB"
+
+
 mcsm_power = on_command("mcsmPower", rule=to_me())
 mcsm_usage = on_command("mcsmUsage", rule=to_me())
 mcsm_log = on_command("mcsmLog", rule=to_me())
@@ -73,7 +104,39 @@ async def mcsm_usage_function(args: Message = CommandArg()):
         args if isinstance(args, str) else args.extract_plain_text(), None
     )
     if specified_key is None:
-        await mcsm_usage.finish(response_text)
+        stats_text = ""
+        stats_text += f'当前状态：{response_json["attributes"]["current_state"]}'
+        if response_json["attributes"]["current_state"] == "offline":
+            stats_text += f'\n硬盘：{await convert_bytes_to_size(response_json["attributes"]["resources"]["disk_bytes"])}'
+        else:
+            (
+                day_part,
+                hour_part,
+                minute_part,
+                second_part,
+            ) = await convert_milliseconds_to_time(
+                response_json["attributes"]["resources"]["uptime"]
+            )
+            stats_text += (
+                (
+                    "\n在线时间："
+                    + (f"{day_part}d" if day_part else "")
+                    + (f"{hour_part}h" if day_part or hour_part else "")
+                    + (
+                        f"{minute_part}m"
+                        if day_part or hour_part or minute_part
+                        else ""
+                    )
+                    + f"{second_part}s\n"
+                )
+                if day_part or hour_part or minute_part or second_part
+                else "\n"
+            )
+            stats_text += f'CPU负载：{response_json["attributes"]["resources"]["cpu_absolute"]}%\n'
+            stats_text += f'内存：{await convert_bytes_to_size(response_json["attributes"]["resources"]["memory_bytes"])}\n'
+            stats_text += f'硬盘：{await convert_bytes_to_size(response_json["attributes"]["resources"]["disk_bytes"])}\n'
+            stats_text += f'网络 (接收)：{await convert_bytes_to_size(response_json["attributes"]["resources"]["network_rx_bytes"])}\n'
+            stats_text += f'网络 (发送)：{await convert_bytes_to_size(response_json["attributes"]["resources"]["network_tx_bytes"])}'
     else:
         resource_attributes = response_json["attributes"]["resources"]
         specified_value = resource_attributes.get(
