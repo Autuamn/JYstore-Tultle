@@ -14,9 +14,10 @@ signal_mapping = {
     "restart": "restart",
     "stop": "stop",
     "start": "start",
-    "开": "start",
-    "关": "stop",
+    "强制停止": "kill",
     "重启": "restart",
+    "关": "stop",
+    "开": "start",
 }
 
 key_mapping = {

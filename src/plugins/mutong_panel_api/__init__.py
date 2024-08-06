@@ -39,35 +39,33 @@ async def http_post(url, headers, data):
             return response.status, await response.text()
 
 
-async def convert_milliseconds_to_time(milliseconds: int) -> tuple[int, int, int, int]:
-    seconds = milliseconds / 1000
-    minutes = seconds / 60
-    hours = minutes / 60
-    days = hours / 24
+async def milliseconds_to_time(milliseconds: int) -> str:
+    seconds = milliseconds // 1000
+    minutes = seconds // 60
+    hours = minutes // 60
+    days = hours // 24
 
-    day_part = int(days)
-    hour_part = int(hours % 24)
-    minute_part = int(minutes % 60)
-    second_part = int(seconds % 60)
+    timer_parts = []
+    if days > 0:
+        timer_parts.append(f"{days}d")
+    if hours % 24 > 0 or days > 0:
+        timer_parts.append(f"{hours % 24}h")
+    if minutes % 60 > 0 or hours % 24 > 0 or days > 0:
+        timer_parts.append(f"{minutes % 60}m")
+    if seconds % 60 >= 0:  # Always include seconds
+        timer_parts.append(f"{seconds % 60}s")
 
-    return day_part, hour_part, minute_part, second_part
+    timer_str = " ".join(timer_parts)
+    return timer_str
 
 
-async def convert_bytes_to_size(bytes_count: int) -> str:
-    # 定义字节数量与量级之间的转换关系
-    KiB = 1024
-    MiB = KiB**2
-    GiB = KiB**3
-
-    # 根据字节数量选择合适的量级
-    if bytes_count < KiB:
-        return f"{bytes_count} bytes"
-    elif bytes_count < MiB:
-        return f"{bytes_count / KiB:.2f} KiB"
-    elif bytes_count < GiB:
-        return f"{bytes_count / MiB:.2f} MiB"
-    else:
-        return f"{bytes_count / GiB:.2f} GiB"
+async def bytes_to_size(bytes_count: int) -> str:
+    bytes = bytes_count
+    for unit in ["B", "KiB", "MiB", "GiB"]:
+        if bytes < 1024:
+            return f"{bytes:.2f}{unit}"
+        bytes /= 1024
+    return f"{bytes:.2f}TiB"
 
 
 mcsm_power = on_command("mcsmPower", rule=to_me())
@@ -103,46 +101,37 @@ async def mcsm_usage_function(args: Message = CommandArg()):
     specified_key = key_mapping.get(
         args if isinstance(args, str) else args.extract_plain_text(), None
     )
-    if specified_key is None:
-        stats_text = ""
-        stats_text += f'当前状态：{response_json["attributes"]["current_state"]}'
-        if response_json["attributes"]["current_state"] == "offline":
-            stats_text += f'\n硬盘：{await convert_bytes_to_size(response_json["attributes"]["resources"]["disk_bytes"])}'
-        else:
-            (
-                day_part,
-                hour_part,
-                minute_part,
-                second_part,
-            ) = await convert_milliseconds_to_time(
-                response_json["attributes"]["resources"]["uptime"]
-            )
-            stats_text += (
-                (
-                    "\n在线时间："
-                    + (f"{day_part}d" if day_part else "")
-                    + (f"{hour_part}h" if day_part or hour_part else "")
-                    + (
-                        f"{minute_part}m"
-                        if day_part or hour_part or minute_part
-                        else ""
-                    )
-                    + f"{second_part}s\n"
-                )
-                if day_part or hour_part or minute_part or second_part
-                else "\n"
-            )
-            stats_text += f'CPU负载：{response_json["attributes"]["resources"]["cpu_absolute"]}%\n'
-            stats_text += f'内存：{await convert_bytes_to_size(response_json["attributes"]["resources"]["memory_bytes"])}\n'
-            stats_text += f'硬盘：{await convert_bytes_to_size(response_json["attributes"]["resources"]["disk_bytes"])}\n'
-            stats_text += f'网络 (接收)：{await convert_bytes_to_size(response_json["attributes"]["resources"]["network_rx_bytes"])}\n'
-            stats_text += f'网络 (发送)：{await convert_bytes_to_size(response_json["attributes"]["resources"]["network_tx_bytes"])}'
-    else:
-        resource_attributes = response_json["attributes"]["resources"]
+    resource_attributes = response_json["attributes"]["resources"]
+    if specified_key:
         specified_value = resource_attributes.get(
-            specified_key, response_json["attributes"].get(specified_key, None)
+            specified_key,
+            response_json["attributes"].get(specified_key, "不支持的参数"),
         )
-        await mcsm_usage.finish(str(specified_value))
+        if specified_value == "不支持的参数" or specified_key == "current_state":
+            stats_text = specified_key
+        elif specified_key == "cpu_absolute":
+            stats_text = f"{specified_value}%"
+        elif specified_key == "uptime":
+            stats_text = await milliseconds_to_time(specified_value)
+        elif specified_key in ["memory_bytes", "disk_bytes"]:
+            stats_text = await bytes_to_size(specified_value)
+    else:
+        stats_text = f'当前状态：{response_json["attributes"]["current_state"]}'
+        if response_json["attributes"]["current_state"] == "offline":
+            stats_text += (
+                f'\n硬盘：{await bytes_to_size(resource_attributes["disk_bytes"])}'
+            )
+        else:
+            uptime_str = await milliseconds_to_time(resource_attributes["uptime"])
+            stats_text += (
+                f"\n在线时间：{uptime_str}"
+                + f'\nCPU负载：{resource_attributes["cpu_absolute"]}%'
+                + f'\n内存：{await bytes_to_size(resource_attributes["memory_bytes"])}'
+                + f'\n硬盘：{await bytes_to_size(resource_attributes["disk_bytes"])}'
+                + f'\n网络 (接收)：{await bytes_to_size(resource_attributes["network_rx_bytes"])}'
+                + f'\n网络 (发送)：{await bytes_to_size(resource_attributes["network_tx_bytes"])}'
+            )
+    await mcsm_usage.finish(stats_text)
 
 
 @mcsm_log.handle()
@@ -155,8 +144,8 @@ async def mcsm_log_function(args: Message = CommandArg()):
             n = int(args.extract_plain_text())
             last_n_lines = list(StringIO(response_file).readlines()[-n:])
             await mcsm_log.send("".join(last_n_lines))
-        except ValueError:
-            await mcsm_log.finish("error")
+        except ValueError as e:
+            await mcsm_log.finish(f"error: {e}")
     else:
         try:
             await mcsm_log.send(f"{file_contents_api}?file={file_dir}")
