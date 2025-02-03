@@ -116,20 +116,20 @@ async def mcsm_usage_function(args: Message = CommandArg()):
         elif specified_key in ["memory_bytes", "disk_bytes"]:
             stats_text = await bytes_to_size(specified_value)
     else:
-        stats_text = f'当前状态：{response_json["attributes"]["current_state"]}'
+        stats_text = f"当前状态：{response_json['attributes']['current_state']}"
         if response_json["attributes"]["current_state"] == "offline":
             stats_text += (
-                f'\n硬盘：{await bytes_to_size(resource_attributes["disk_bytes"])}'
+                f"\n硬盘：{await bytes_to_size(resource_attributes['disk_bytes'])}"
             )
         else:
             uptime_str = await milliseconds_to_time(resource_attributes["uptime"])
             stats_text += (
                 f"\n在线时间：{uptime_str}"
-                + f'\nCPU负载：{resource_attributes["cpu_absolute"]}%'
-                + f'\n内存：{await bytes_to_size(resource_attributes["memory_bytes"])}'
-                + f'\n硬盘：{await bytes_to_size(resource_attributes["disk_bytes"])}'
-                + f'\n网络 (接收)：{await bytes_to_size(resource_attributes["network_rx_bytes"])}'
-                + f'\n网络 (发送)：{await bytes_to_size(resource_attributes["network_tx_bytes"])}'
+                + f"\nCPU负载：{resource_attributes['cpu_absolute']}%"
+                + f"\n内存：{await bytes_to_size(resource_attributes['memory_bytes'])}"
+                + f"\n硬盘：{await bytes_to_size(resource_attributes['disk_bytes'])}"
+                + f"\n网络 (接收)：{await bytes_to_size(resource_attributes['network_rx_bytes'])}"
+                + f"\n网络 (发送)：{await bytes_to_size(resource_attributes['network_tx_bytes'])}"
             )
     await mcsm_usage.finish(stats_text)
 
