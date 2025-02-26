@@ -10,9 +10,10 @@ requires-python = ">=3.9, <4.0"
 adapters = [
     {name = "QQ", module_name = "nonebot.adapters.qq"},
     {name = "开黑啦", module_name = "nonebot.adapters.kaiheila"},
-    {name = "Discod", module_name = "nonebot.adapters.discord"}
+    {name = "Discod", module_name = "nonebot.adapters.discord"},
+    {name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11"}
 ]
-plugins = ["nonebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore"]
+plugins = ["noinebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore"]
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
 
@@ -36,6 +37,7 @@ nonebot-adapter-discord = "^0.1.7"
 nonebot-plugin-apscheduler = "^0.4.0"
 nonebot-plugin-localstore = "^0.6.0"
 pillow = "^10.3.0"
+nonebot-adapter-onebot = "^2.4.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.4"
