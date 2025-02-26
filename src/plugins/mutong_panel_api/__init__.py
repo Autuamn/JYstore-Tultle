@@ -67,7 +67,7 @@ async def bytes_to_size(bytes_count: int) -> str:
 
 
 ppapi_power = on_command("ppapi power", aliases={"ppapi 开关"})
-ppapi_resources = on_command("ppapi resources", aliases={"aapai 资源"})
+ppapi_resources = on_command("ppapi resources", aliases={"ppapi 资源"})
 ppapi_log = on_command("ppapi log", aliases={"ppapi 日志"})
 ppapi_api_chack = on_command("ppapi chack", aliases={"ppapi 检查"})
 ppapi_command = on_command("ppapi command", aliases={"ppapi 命令"})
