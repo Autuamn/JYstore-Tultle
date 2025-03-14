@@ -13,7 +13,7 @@ adapters = [
     {name = "Discod", module_name = "nonebot.adapters.discord"},
     {name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11"}
 ]
-plugins = ["noinebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore"]
+plugins = ["noinebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore", "nonebot_plugin_epicfree"]
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
 
@@ -38,6 +38,7 @@ nonebot-plugin-apscheduler = "^0.4.0"
 nonebot-plugin-localstore = "^0.6.0"
 pillow = "^10.3.0"
 nonebot-adapter-onebot = "^2.4.6"
+nonebot-plugin-epicfree = "^0.2.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.4"

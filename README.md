@@ -15,12 +15,11 @@
 - [本地数据存储](https://github.com/nonebot/plugin-localstore)
 - [定时任务](https://github.com/nonebot/plugin-apscheduler)
 - [服务器状态查看](https://github.com/cscs181/QQ-GitHub-Bot/tree/master/src/plugins/nonebot_plugin_status)
+- [Epic 限免游戏资讯](https://github.com/monsterxcn/nonebot_plugin_epicfree)
 
 ### 自制插件：
-- epicfree：获取 Epic Game 免费游戏
 - mutong_panel_api：控制[木桶面板](https://vat.yunqiaold.com/index.php)的翼龙面板api
 - recode_picture：记录发送过的图片，并返回图片的直链
-- sync_message_to_discord：在QQ频道和 Discord 之间同步消息
 
 ## 使用
 本项目基于 nb-cli 脚手架运行，请先安装 nb-cli ，详见[NoneBot 快速上手](https://nonebot.dev/docs/quick-start)
@@ -146,41 +145,6 @@ localstore_data_dir=""    # 数据目录
     ```
 
     控制启用的子频道
-
-### sync_message_to_discord
-
-- smd_unmatch_beginning
-
-    ```dotenv
-    smd_unmatch_beginning=["/", "!"]
-    ```
-    指明不转发的消息开头，默认为`["/"]`
-
-- smd_channel_bind
-
-    ```dotenv
-    smd_channel_links=[
-        {
-            qq_guild_id: "123132",
-            dc_guild_id: 456456,
-            qq_channel_id: "78789",
-            dc_channel_id: 123123,
-            webhook_id: 456456,
-            webhook_token: "xxx"
-        },
-        {
-            qq_guild_id: str    # QQ频道 id
-            dc_guild_id: int    # Discord 服务器 id
-            qq_channel_id: str  # QQ子频道 id
-            dc_channel_id: int  # Discord 频道 id
-            webhook_id: int     # WebHook id
-            webhook_token: str  # WebHook token
-                                # 请不要将注释放在此处！！
-        }
-    ]
-    ```
-
-    绑定QQ子频道和 Discode 频道，需要自行准备好 [WebHook](https://discord.com/developers/docs/resources/webhook)
 
 ## More
 
