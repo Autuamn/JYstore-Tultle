@@ -6,16 +6,16 @@
 
 ### 适配器使用：
 
+- [OneBot](https://github.com/nonebot/adapter-onebot)
 - [QQ](https://github.com/nonebot/adapter-qq)
 - [Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila)
 - [Discord](https://github.com/nonebot/adapter-discord)
 
 ### 已安装插件：
 
-- [本地数据存储](https://github.com/nonebot/plugin-localstore)
-- [定时任务](https://github.com/nonebot/plugin-apscheduler)
 - [服务器状态查看](https://github.com/cscs181/QQ-GitHub-Bot/tree/master/src/plugins/nonebot_plugin_status)
 - [Epic 限免游戏资讯](https://github.com/monsterxcn/nonebot_plugin_epicfree)
+- [这是什么](https://github.com/djkcyl/nonebot-plugin-zssm)
 
 ### 自制插件：
 - mutong_panel_api：控制[木桶面板](https://vat.yunqiaold.com/index.php)的翼龙面板api
@@ -41,7 +41,7 @@ cd JYstore-Tultle
 
 在**项目文件夹**创建一个`.env`文件，并写入以下内容：
 ```dotenv
-DRIVER=~aiohttp
+DRIVER=~fastapi+~aiohttp
 QQ_BOTS='
 [
   {
@@ -72,7 +72,7 @@ kaiheila_bots =[{"token": "xxx"}]
 ```
 如果无法直接访问 Discord 还需加上`DISCORD_PROXY`设置代理
 
-更多详细参数请见各适配器的说明：[QQ](https://github.com/nonebot/adapter-qq)、[Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila/blob/master/MANUAL.md)、[Discord](https://github.com/nonebot/adapter-discord)
+更多详细参数请见各适配器的说明：[OneBot](https://onebot.adapters.nonebot.dev/docs/guide/setup)、[QQ](https://github.com/nonebot/adapter-qq)、[Kook](https://github.com/Tian-que/nonebot-adapter-kaiheila/blob/master/MANUAL.md)、[Discord](https://github.com/nonebot/adapter-discord)
 
 ### 运行机器人
 
