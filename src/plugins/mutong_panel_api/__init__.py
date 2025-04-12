@@ -69,7 +69,7 @@ async def bytes_to_size(bytes_count: int) -> str:
 ppapi_power = on_command("ppapi power", aliases={"ppapi 开关"})
 ppapi_resources = on_command("ppapi resources", aliases={"ppapi 资源"})
 ppapi_log = on_command("ppapi log", aliases={"ppapi 日志"})
-ppapi_api_chack = on_command("ppapi chack", aliases={"ppapi 检查"})
+ppapi_api_check = on_command("ppapi check", aliases={"ppapi 检查"})
 ppapi_command = on_command("ppapi command", aliases={"ppapi 命令"})
 
 
@@ -137,25 +137,20 @@ async def ppapi_log_function(args: Message = CommandArg()):
     file_contents_api = f"{CLIENT_API}/files/contents"
     file_dir = "/logs/latest.log"
     _, response_file = await http_get(f"{file_contents_api}?file={file_dir}", HEADEARS)
-    if args:
-        try:
-            n = int(args.extract_plain_text())
-            last_n_lines = response_file.split("\n")[-(n + 1) : -1]
-            await ppapi_log.send("\n".join(last_n_lines))
-        except ValueError as e:
-            await ppapi_log.finish(f"error: {e}")
-    else:
-        try:
-            await ppapi_log.send(f"{file_contents_api}?file={file_dir}")
-        except Exception as e:
-            await ppapi_log.finish(f"{e}")
+
+    try:
+        n = int(args.extract_plain_text()) if args else 10
+        last_n_lines = response_file.split("\n")[-(n + 1) : -1]
+        await ppapi_log.send("\n".join(last_n_lines))
+    except ValueError as e:
+        await ppapi_log.finish(f"error: {e}")
 
 
-@ppapi_api_chack.handle()
-async def ppapi_api_chack_function():
+@ppapi_api_check.handle()
+async def ppapi_api_check_function():
     status_code, response_text = await http_get(CLIENT_API, HEADEARS)
     message = f"{status_code} OK" if status_code == 200 else response_text
-    await ppapi_api_chack.send(message)
+    await ppapi_api_check.send(message)
 
 
 @ppapi_command.handle()
