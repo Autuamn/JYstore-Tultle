@@ -8,7 +8,6 @@ requires-python = ">=3.12, <4.0"
 
 [tool.nonebot]
 adapters = [
-    {name = "QQ", module_name = "nonebot.adapters.qq"},
     {name = "开黑啦", module_name = "nonebot.adapters.kaiheila"},
     {name = "Discod", module_name = "nonebot.adapters.discord"},
     {name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11"}
@@ -30,20 +29,21 @@ python = "^3.12"
 nonebot2 = {extras = ["aiohttp"], version = "^2.2.1"}
 nonebot-adapter-kaiheila = "^0.3.3"
 nonebot-adapter-qq = "^1.4.2"
-nonebot-plugin-status = "^0.8.1"
+nonebot-plugin-status = "^0.9.0"
 filetype = "^1.2.0"
-pytz = "^2024.1"
+pytz = "*"
 nonebot-adapter-discord = "^0.1.7"
-nonebot-plugin-apscheduler = "^0.4.0"
-nonebot-plugin-localstore = "^0.6.0"
+nonebot-plugin-apscheduler = "^0.5.0"
+nonebot-plugin-localstore = "^0.7.4"
 pillow = "^11.1.0"
 nonebot-adapter-onebot = "^2.4.6"
 nonebot-plugin-epicfree = "^0.2.6"
-nonebot-plugin-zssm = "0.2.0"
+nonebot-plugin-zssm = "^0.3.1"
+nonebot-plugin-alconna = "^0.58.1"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.3.4"
-pre-commit = "^3.6.2"
+ruff = "^0.11.12"
+pre-commit = "^4.2.0"
 
 
 [tool.ruff]
