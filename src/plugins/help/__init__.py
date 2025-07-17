@@ -46,6 +46,8 @@ async def _():
         "/help：显示帮助\n"
         + "/ppapi：翼龙面板api\n"
         + "/status：服务器状态[*]\n"
+        + "/cvopen开启复读模式\n"
+        + "/cvclose关闭复读模式\n"
         + "喜加一：epic喜加一快报\n"
         + "zssm：这是什么？问一下\n"
         + "（[*]：需要@机器人）"
