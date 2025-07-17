@@ -13,13 +13,16 @@
 
 ### 已安装插件：
 
+- [MC服务器查询](https://github.com/molanp/nonebot_plugin_mccheck)
 - [服务器状态查看](https://github.com/cscs181/QQ-GitHub-Bot/tree/master/src/plugins/nonebot_plugin_status)
 - [Epic 限免游戏资讯](https://github.com/monsterxcn/nonebot_plugin_epicfree)
 - [这是什么](https://github.com/djkcyl/nonebot-plugin-zssm)
 
 ### 自制插件：
+
 - mutong_panel_api：控制[木桶面板](https://vat.yunqiaold.com/index.php)的翼龙面板api
 - recode_picture：记录发送过的图片，并返回图片的直链
+- cvcvcv: 本质是一台复读机()
 
 ## 使用
 本项目基于 nb-cli 脚手架运行，请先安装 nb-cli ，详见[NoneBot 快速上手](https://nonebot.dev/docs/quick-start)
