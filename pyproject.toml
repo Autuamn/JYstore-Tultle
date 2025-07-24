@@ -12,7 +12,7 @@ adapters = [
     {name = "Discod", module_name = "nonebot.adapters.discord"},
     {name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11"}
 ]
-plugins = ["nonebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore", "nonebot_plugin_epicfree", "nonebot_plugin_zssm", "~onebot_plugin_mccheck"]
+plugins = ["nonebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugin_localstore", "nonebot_plugin_epicfree", "nonebot_plugin_zssm", "nonebot_plugin_mccheck"]
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
 
