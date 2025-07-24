@@ -103,32 +103,37 @@ async def ppapi_resources_function(args: Message = CommandArg()):
     if specified_key:
         specified_value = resource_attributes.get(
             specified_key,
-            response_json["attributes"].get(specified_key, "不支持的参数"),
+            response_json["attributes"].get(specified_key, None),
         )
-        if specified_value == "不支持的参数" or specified_key == "current_state":
-            stats_text = specified_key
+        if specified_value is None:
+            pass
+        elif specified_key == "current_state":
+            stats_text = specified_value
         elif specified_key == "cpu_absolute":
             stats_text = f"{specified_value}%"
         elif specified_key == "uptime":
             stats_text = await milliseconds_to_time(specified_value)
         elif specified_key in ["memory_bytes", "disk_bytes"]:
             stats_text = await bytes_to_size(specified_value)
+        if stats_text:
+            await ppapi_resources.finish(stats_text)
+            return
+
+    stats_text = f"当前状态：{response_json['attributes']['current_state']}"
+    if response_json["attributes"]["current_state"] == "offline":
+        stats_text += (
+            f"\n硬盘：{await bytes_to_size(resource_attributes['disk_bytes'])}"
+        )
     else:
-        stats_text = f"当前状态：{response_json['attributes']['current_state']}"
-        if response_json["attributes"]["current_state"] == "offline":
-            stats_text += (
-                f"\n硬盘：{await bytes_to_size(resource_attributes['disk_bytes'])}"
-            )
-        else:
-            uptime_str = await milliseconds_to_time(resource_attributes["uptime"])
-            stats_text += (
-                f"\n在线时间：{uptime_str}"
-                + f"\nCPU负载：{resource_attributes['cpu_absolute']}%"
-                + f"\n内存：{await bytes_to_size(resource_attributes['memory_bytes'])}"
-                + f"\n硬盘：{await bytes_to_size(resource_attributes['disk_bytes'])}"
-                + f"\n网络 (接收)：{await bytes_to_size(resource_attributes['network_rx_bytes'])}"
-                + f"\n网络 (发送)：{await bytes_to_size(resource_attributes['network_tx_bytes'])}"
-            )
+        uptime_str = await milliseconds_to_time(resource_attributes["uptime"])
+        stats_text += (
+            f"\n在线时间：{uptime_str}"
+            + f"\nCPU负载：{resource_attributes['cpu_absolute']}%"
+            + f"\n内存：{await bytes_to_size(resource_attributes['memory_bytes'])}"
+            + f"\n硬盘：{await bytes_to_size(resource_attributes['disk_bytes'])}"
+            + f"\n网络 (接收)：{await bytes_to_size(resource_attributes['network_rx_bytes'])}"
+            + f"\n网络 (发送)：{await bytes_to_size(resource_attributes['network_tx_bytes'])}"
+        )
     await ppapi_resources.finish(stats_text)
 
 
