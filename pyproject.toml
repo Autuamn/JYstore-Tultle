@@ -26,30 +26,27 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-nonebot2 = {extras = ["aiohttp"], version = "^2.2.1"}
-nonebot-adapter-kaiheila = "^0.3.3"
-nonebot-adapter-qq = "^1.4.2"
-nonebot-plugin-status = "^0.9.0"
-filetype = "^1.2.0"
-pytz = "*"
-nonebot-adapter-discord = "^0.1.7"
-nonebot-plugin-apscheduler = "^0.5.0"
-nonebot-plugin-localstore = "^0.7.4"
-pillow = "^11.1.0"
-nonebot-adapter-onebot = "^2.4.6"
-nonebot-plugin-epicfree = "^0.2.6"
-nonebot-plugin-zssm = "^0.3.1"
-nonebot-plugin-alconna = "^0.58.1"
-nonebot-plugin-mccheck = "^0.2.0"
+nonebot2 = { extras = ["aiohttp"], version = "*" }
+nonebot-adapter-kaiheila = "*"
+nonebot-adapter-qq = "*"
+nonebot-plugin-status = "*"
+nonebot-adapter-discord = "*"
+nonebot-plugin-apscheduler = "*"
+nonebot-plugin-localstore = "*"
+nonebot-adapter-onebot = "*"
+nonebot-plugin-epicfree = "*"
+nonebot-plugin-zssm = "*"
+nonebot-plugin-alconna = "*"
+nonebot-plugin-mccheck = { git = "https://github.com/Atlanttis/nonebot_plugin_mcCheck.git" }
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.11.12"
-pre-commit = "^4.2.0"
+ruff = "*"
+pre-commit = "*"
 
 
 [tool.ruff]
 line-length = 88
-target-version = "py39"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "UP", "C", "T", "PYI", "PT"]
@@ -73,7 +70,7 @@ section-order = [
 
 [tool.black]
 line-length = 88
-target-version = ["py39", "py310", "py311"]
+target-version = ["py312", "py313"]
 include = '\.pyi?$'
 extend-exclude = ''''''
 
