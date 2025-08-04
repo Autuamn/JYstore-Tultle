@@ -8,8 +8,8 @@ from .config import plugin_config
 require("nonebot_plugin_alconna")
 
 
-bot_id = str(plugin_config.kook_bot_id)
-guild_id = str(plugin_config.guild_id)
+bot_id = str(plugin_config.kook_on_voice_bot_id)
+guild_id = str(plugin_config.kook_on_voice_guild_id)
 
 
 matcher = on_alconna(Alconna("kook"))

@@ -22,7 +22,8 @@
 
 - mutong_panel_api：控制[木桶面板](https://vat.yunqiaold.com/index.php)的翼龙面板api
 - recode_picture：记录发送过的图片，并返回图片的直链
-- cvcvcv: 本质是一台复读机()
+- cvcvcv：本质是一台复读机()
+- kook_on_voice：查看指定 KOOK 服务器的语音在线情况
 
 ## 使用
 本项目基于 nb-cli 脚手架运行，请先安装 nb-cli ，详见[NoneBot 快速上手](https://nonebot.dev/docs/quick-start)
@@ -148,6 +149,24 @@ localstore_data_dir=""    # 数据目录
     ```
 
     控制启用的子频道
+
+### kook_on_voice
+
+- kook_on_voice_bot_id
+
+    ```dotenv
+    kook_on_voice_bot_id=123456
+    ```
+
+    发送请求的机器人 id
+
+- kook_on_voice_guild_id
+
+    ```dotenv
+    kook_on_voice_guild_id=123456789
+    ```
+
+    查询的 KOOK 服务器
 
 ## More
 
