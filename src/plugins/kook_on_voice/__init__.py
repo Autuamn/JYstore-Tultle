@@ -1,12 +1,11 @@
 from nonebot import get_bot, require
 from nonebot.adapters.kaiheila import Bot
 from nonebot.params import Depends
+
+require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Alconna, on_alconna
 
 from .config import plugin_config
-
-require("nonebot_plugin_alconna")
-
 
 bot_id = str(plugin_config.kook_on_voice_bot_id)
 guild_id = str(plugin_config.kook_on_voice_guild_id)
