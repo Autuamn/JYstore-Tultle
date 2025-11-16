@@ -15,6 +15,7 @@ __plugin_meta__ = PluginMetadata(
 help = on_alconna(
     Alconna(
         "help",
+        Subcommand("mcsm"),
         Subcommand("ppapi"),
         Subcommand("status"),
         Subcommand(
@@ -44,6 +45,7 @@ help = on_alconna(
 async def _():
     await help.finish(
         "/help：显示帮助\n"
+        + "mcsm：MCSManager api\n"
         + "/ppapi：翼龙面板api\n"
         + "/status：服务器状态[*]\n"
         + "/cvopen开启复读模式\n"
@@ -51,6 +53,15 @@ async def _():
         + "喜加一：epic喜加一快报\n"
         + "zssm：这是什么？问一下\n"
         + "（[*]：需要@机器人）"
+    )
+
+
+@help.assign("mcsm")
+async def _():
+    await help.finish(
+        "mcsm：服务器状态\n"
+        + "mcsm (command|命令) [<参数>]：执行命令\n"
+        + "mcsm (开|关|重启|强制停止|on|off|restart|kill)\n"
     )
 
 
