@@ -45,6 +45,7 @@ help = on_alconna(
 async def _():
     await help.finish(
         "/help：显示帮助\n"
+        + "mcsm：MCSManager api\n"
         + "/ppapi：翼龙面板api\n"
         + "/status：服务器状态[*]\n"
         + "/cvopen开启复读模式\n"
