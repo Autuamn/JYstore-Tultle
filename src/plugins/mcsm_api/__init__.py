@@ -1,6 +1,7 @@
 from asyncio import gather
 from collections.abc import Mapping
 import json
+import re
 from typing import Any
 
 from nonebot import require
@@ -113,27 +114,25 @@ async def command(bot: Bot, command: tuple[str, ...]):
     )
     if status_code != 200:
         await matcher.finish(str(status_code) + " " + str(data))
-    else:
-        _, resp = await gather(
-            matcher.send("命令已发送！"),
-            request(
-                bot,
-                "get",
-                f"{url}/outputlog",
-                {"size": 20480},
-            ),
-        )
-        if resp[0] != 200 or isinstance(resp[1], dict):
-            return
-        logs = resp[1].replace("\u001b[m> \r\u001b[K\u001b[32m", "").split("\r\n")
-        index: None | int = None
-        for i, log in enumerate(logs):
-            if f"\x1b[m> {c_command}\r" == log:
-                index = i
-        if index:
-            await matcher.finish(
-                "\r\n".join(logs[index + 1 : -1]).replace(
-                    "\u001b[?1l\u001b>\u001b[?1000l\u001b[?2004l\u001b[?1h\u001b=\u001b[?2004h> \r\u001b[K\u001b[32m",
-                    "",
-                )
-            )
+        return
+
+    await matcher.send("命令已发送！")
+    resp = await request(
+        bot,
+        "get",
+        f"{url}/outputlog",
+        {"size": 20480},
+    )
+    if resp[0] != 200 or isinstance(resp[1], dict):
+        return
+    logs = re.sub(
+        r"\x1b[\[>=](?:(?:\?1l)|(?:\?1000l)|(?:\?2004l)|(?:\?1h)|(?:\?2004h)|(?:\d?\d?[Km]))?",
+        "",
+        resp[1],
+    ).split("\r\n")
+    index: None | int = None
+    for i, log in enumerate(logs):
+        if f"> {c_command}\r" == log:
+            index = i
+    if index:
+        await matcher.finish("\n".join(logs[index + 1 : -1]).replace("> \r", ""))
