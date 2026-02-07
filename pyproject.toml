@@ -2,8 +2,36 @@
 name = "JYstore-Tultle"
 version = "1.0.1"
 description = "Just a tultle"
-readme = "README.md"
+authors = [{ name = "Autuamn", email = "autuamn@qq.com" }]
 requires-python = ">=3.12, <4.0"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "nonebot2[aiohttp]",
+    "nonebot-adapter-kaiheila",
+    "nonebot-adapter-qq",
+    "nonebot-plugin-status",
+    "nonebot-adapter-discord",
+    "nonebot-plugin-apscheduler",
+    "nonebot-plugin-localstore",
+    "nonebot-adapter-onebot",
+    "nonebot-plugin-epicfree",
+    "nonebot-plugin-zssm",
+    "nonebot-plugin-alconna",
+    "nonebot-plugin-mccheck",
+]
+
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "pre-commit",
+]
 
 
 [tool.nonebot]
@@ -16,32 +44,9 @@ plugins = ["nonebot_plugin_status", "nonebot_plugin_apscheduler", "nonebot_plugi
 plugin_dirs = ["src/plugins"]
 builtin_plugins = ["echo"]
 
-
-[tool.poetry]
-name = "jystore-tultle"
-version = "1.0.1"
-description = "Just a tultle"
-authors = ["Autuamn <autuamn@qq.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-nonebot2 = { extras = ["aiohttp"], version = "*" }
-nonebot-adapter-kaiheila = "*"
-nonebot-adapter-qq = "*"
-nonebot-plugin-status = "*"
-nonebot-adapter-discord = "*"
-nonebot-plugin-apscheduler = "*"
-nonebot-plugin-localstore = "*"
-nonebot-adapter-onebot = "*"
-nonebot-plugin-epicfree = "*"
-nonebot-plugin-zssm = "*"
-nonebot-plugin-alconna = "*"
+[tool.uv]
+[tool.uv.sources]
 nonebot-plugin-mccheck = { git = "https://github.com/Atlanttis/nonebot_plugin_mcCheck.git" }
-
-[tool.poetry.group.dev.dependencies]
-ruff = "*"
-pre-commit = "*"
 
 
 [tool.ruff]
@@ -76,5 +81,5 @@ extend-exclude = ''''''
 
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.0,<0.10.0"]
+build-backend = "uv_build"
