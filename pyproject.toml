@@ -57,6 +57,7 @@ nonebot-adapter-onebot = [{name = "OneBot V11", module_name = "nonebot.adapters.
 [tool.uv]
 [tool.uv.sources]
 nonebot-plugin-mccheck = { git = "https://github.com/Atlanttis/nonebot_plugin_mcCheck.git" }
+nonebot-plugin-zssm = { git = "https://github.com/djkcyl/nonebot-plugin-zssm.git", rev = "master" }
 
 
 [tool.ruff]
